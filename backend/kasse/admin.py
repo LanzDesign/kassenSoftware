@@ -1,5 +1,36 @@
 from django.contrib import admin
-from .models import Kassenabrechnung
+from .models import Kassenabrechnung, KassenEinstellungen
+
+
+@admin.register(KassenEinstellungen)
+class KassenEinstellungenAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Kassenstand', {
+            'fields': ('kassenstand_anfang_default',)
+        }),
+        ('Position 1', {
+            'fields': (('bezeichnung_position1', 'preis_position1'),)
+        }),
+        ('Position 2', {
+            'fields': (('bezeichnung_position2', 'preis_position2'),)
+        }),
+        ('Position 3', {
+            'fields': (('bezeichnung_position3', 'preis_position3'),)
+        }),
+        ('Metadaten', {
+            'fields': ('aktualisiert_am',),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ['aktualisiert_am']
+    
+    def has_add_permission(self, request):
+        # Nur ein Eintrag erlaubt
+        return not KassenEinstellungen.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        # Nicht löschbar
+        return False
 
 
 @admin.register(Kassenabrechnung)

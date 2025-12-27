@@ -1,8 +1,23 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
-from .models import Kassenabrechnung
+from .models import Kassenabrechnung, KassenEinstellungen
 from .serializers import KassenabrechnungSerializer
+
+
+@api_view(['GET'])
+def einstellungen_view(request):
+    """Gibt die Kassen-Einstellungen zurück"""
+    einstellungen = KassenEinstellungen.get_einstellungen()
+    return Response({
+        'kassenstand_anfang_default': str(einstellungen.kassenstand_anfang_default),
+        'bezeichnung_position1': einstellungen.bezeichnung_position1,
+        'bezeichnung_position2': einstellungen.bezeichnung_position2,
+        'bezeichnung_position3': einstellungen.bezeichnung_position3,
+        'preis_position1': str(einstellungen.preis_position1),
+        'preis_position2': str(einstellungen.preis_position2),
+        'preis_position3': str(einstellungen.preis_position3),
+    })
 
 
 class KassenabrechnungViewSet(viewsets.ModelViewSet):

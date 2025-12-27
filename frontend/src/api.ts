@@ -10,7 +10,23 @@ const api = axios.create({
   },
 });
 
+export interface KassenEinstellungen {
+  kassenstand_anfang_default: string;
+  bezeichnung_position1: string;
+  bezeichnung_position2: string;
+  bezeichnung_position3: string;
+  preis_position1: string;
+  preis_position2: string;
+  preis_position3: string;
+}
+
 export const kassenService = {
+  // Hole Einstellungen
+  getEinstellungen: async (): Promise<KassenEinstellungen> => {
+    const response = await api.get("/einstellungen/");
+    return response.data;
+  },
+
   // Hole aktuelle Kassenabrechnung
   getAktuelle: async (): Promise<Kassenabrechnung> => {
     const response = await api.get("/abrechnungen/aktuelle/");

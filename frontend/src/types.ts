@@ -5,6 +5,10 @@ export interface Kassenabrechnung {
   anzahl_kinder: number;
   anzahl_erwachsene: number;
   anzahl_tee: number;
+  gesamt_kinder?: number;
+  gesamt_erwachsene?: number;
+  gesamt_tee?: number;
+  gesamt_bargeld?: number;
   preis_kinder: number;
   preis_erwachsene: number;
   preis_tee: number;
