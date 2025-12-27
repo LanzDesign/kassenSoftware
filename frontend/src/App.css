@@ -1,0 +1,299 @@
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  color: #2d3748;
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.header p {
+  color: #718096;
+  font-size: 1rem;
+}
+
+.summary-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-item label {
+  color: #718096;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.summary-item .value {
+  color: #2d3748;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.summary-item.highlight .value {
+  background: #2c5282;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.next-button {
+  width: 100%;
+  padding: 15px;
+  background: #2c5282;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.next-button:hover {
+  background: #1e3a5f;
+}
+
+.sales-section {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sales-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.sales-item {
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+}
+
+.sales-item.kinder {
+  background: #fef3c7;
+}
+
+.sales-item.erwachsen {
+  background: #fecaca;
+}
+
+.sales-item.tee {
+  background: #d1fae5;
+}
+
+.sales-item h3 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.counter-display {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.counter-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.counter-button {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: #2c5282;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.counter-button:hover {
+  background: #1e3a5f;
+}
+
+.counter-button.minus {
+  background: #e53e3e;
+}
+
+.counter-button.minus:hover {
+  background: #c53030;
+}
+
+.payment-section {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.payment-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-item label {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.payment-item .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 15px;
+  background: #f7fafc;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.money-section {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.money-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.money-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background: #f7fafc;
+  border-radius: 10px;
+}
+
+.money-item img {
+  width: 80px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.money-item .count {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.money-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.action-button {
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.action-button.reset {
+  background: #2c5282;
+  color: white;
+}
+
+.action-button.reset:hover {
+  background: #1e3a5f;
+}
+
+.action-button.save {
+  background: #48bb78;
+  color: white;
+}
+
+.action-button.save:hover {
+  background: #38a169;
+}
+
+.error {
+  background: #feb2b2;
+  color: #742a2a;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .sales-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .money-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
