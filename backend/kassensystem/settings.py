@@ -154,13 +154,17 @@ if os.getenv('DEBUG', 'False') == 'True':
     ])
 
 # Security Settings
+# SECURE_SSL_REDIRECT sollte NICHT im Backend-Container aktiviert sein,
+# da NGINX das SSL-Handling übernimmt
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # SECURE_SSL_REDIRECT = True  # Deaktiviert - NGINX macht SSL
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
+    # Trust X-Forwarded-Proto header from NGINX
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # REST Framework Settings
 REST_FRAMEWORK = {
