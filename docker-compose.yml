@@ -15,6 +15,8 @@ services:
   backend:
     build: ./backend
     container_name: kassensoftware-backend
+    ports:
+      - "8002:8000"
     volumes:
       - ./backend:/app
       - backend-static:/app/staticfiles
@@ -30,7 +32,7 @@ services:
     build: ./frontend
     container_name: kassensoftware-frontend
     ports:
-      - "8080:80"
+      - "3002:80"
     depends_on:
       - backend
     restart: unless-stopped
