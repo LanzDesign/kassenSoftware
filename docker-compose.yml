@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: kassensoftware-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kasse_db
+      POSTGRES_USER: kasse_user
+      POSTGRES_PASSWORD: dein_sicheres_passwort
+    restart: unless-stopped
+    networks:
+      - kassensoftware-network
+
+  backend:
+    build: ./backend
+    container_name: kassensoftware-backend
+    volumes:
+      - ./backend:/app
+      - backend-static:/app/staticfiles
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - kassensoftware-network
+
+  frontend:
+    build: ./frontend
+    container_name: kassensoftware-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - kassensoftware-network
+
+volumes:
+  backend-static:
+  postgres-data:
+
+networks:
+  kassensoftware-network:
+    driver: bridge
