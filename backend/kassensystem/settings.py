@@ -150,6 +150,7 @@ if os.getenv('DEBUG', 'False') == 'True':
     CSRF_TRUSTED_ORIGINS.extend([
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "kassensoftware.fecg-lahr-app.de",
     ])
 
 # Security Settings
