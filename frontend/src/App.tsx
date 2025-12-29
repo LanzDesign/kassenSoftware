@@ -17,6 +17,7 @@ function App() {
   const [letzteKosten, setLetzteKosten] = useState<number>(0);
   const [showNeueAbrechnungModal, setShowNeueAbrechnungModal] = useState(false);
   const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
+  const [showMenuModal, setShowMenuModal] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -156,10 +157,7 @@ function App() {
     updateKasse({ [field]: newValue });
   };
 
-  const setCounter = (
-    field: keyof Kassenabrechnung,
-    value: number
-  ) => {
+  const setCounter = (field: keyof Kassenabrechnung, value: number) => {
     if (!kasse) return;
     updateKasse({ [field]: value });
   };
@@ -394,7 +392,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
       .writeText(bericht)
       .then(() => {
         alert(
-          "Bericht wurde in die Zwischenablage kopiert!\n\nSie können ihn jetzt in eine E-Mail oder Dokument einfügen."
+          "✅ Bericht wurde in die Zwischenablage kopiert!\n\nSie können ihn jetzt teilen:\n• WhatsApp\n• E-Mail\n• SMS\n\nEinfach einfügen (Strg+V)"
         );
       })
       .catch(() => {
@@ -459,6 +457,28 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
 
   return (
     <div className="App">
+      {/* Menü-Button oben rechts */}
+      <button
+        onClick={() => setShowMenuModal(true)}
+        style={{
+          position: "fixed",
+          top: "10px",
+          right: "10px",
+          background: "#2c5282",
+          color: "white",
+          border: "none",
+          borderRadius: "50%",
+          width: "50px",
+          height: "50px",
+          fontSize: "1.5rem",
+          cursor: "pointer",
+          zIndex: 100,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+        }}
+      >
+        ☰
+      </button>
+
       {/* Top Section: Gesamtsumme, Gegeben, Rückgeld, Nächster Button */}
       <div className="top-section">
         <div className="summary-card">
@@ -823,7 +843,8 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
         }}
       >
         <span>
-          Datum: {new Date(kasse.datum).toLocaleDateString("de-DE", {
+          Datum:{" "}
+          {new Date(kasse.datum).toLocaleDateString("de-DE", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
@@ -845,6 +866,120 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           🚪 Abmelden
         </button>
       </div>
+
+      {/* Menü Modal */}
+      {showMenuModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setShowMenuModal(false)}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "30px",
+              borderRadius: "15px",
+              minWidth: "400px",
+              maxWidth: "500px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2
+              style={{
+                textAlign: "center",
+                marginBottom: "20px",
+                color: "#2c5282",
+              }}
+            >
+              ⚙️ Menü
+            </h2>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              <button
+                onClick={() => {
+                  handleBerichtTeilen();
+                  setShowMenuModal(false);
+                }}
+                style={{
+                  padding: "15px",
+                  background: "#5a67d8",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                📄 Bericht erstellen & kopieren
+              </button>
+              <button
+                onClick={() => {
+                  handlePreiseAktualisieren();
+                  setShowMenuModal(false);
+                }}
+                style={{
+                  padding: "15px",
+                  background: "#9f7aea",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                💰 Preise aktualisieren
+              </button>
+              <button
+                onClick={() => {
+                  setShowMenuModal(false);
+                  setShowNeueAbrechnungModal(true);
+                }}
+                style={{
+                  padding: "15px",
+                  background: "#48bb78",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ➕ Neue Abrechnung
+              </button>
+              <button
+                onClick={() => setShowMenuModal(false)}
+                style={{
+                  padding: "15px",
+                  background: "#718096",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ✖️ Schließen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal für Neue Abrechnung */}
       {showNeueAbrechnungModal && (
