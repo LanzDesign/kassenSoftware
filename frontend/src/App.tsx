@@ -455,6 +455,20 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
     kasse.anzahl_erwachsene * kasse.preis_erwachsene +
     kasse.anzahl_tee * kasse.preis_tee;
 
+  // Live-Berechnung: Gegeben und Rückgeld basierend auf eingegebenen Münzen/Scheinen
+  const aktuellesGegeben =
+    kasse.anzahl_50euro * 50 +
+    kasse.anzahl_20euro * 20 +
+    kasse.anzahl_10euro * 10 +
+    kasse.anzahl_5euro * 5 +
+    kasse.anzahl_2euro * 2 +
+    kasse.anzahl_1euro * 1 +
+    kasse.anzahl_50cent * 0.5 +
+    kasse.anzahl_20cent * 0.2 +
+    kasse.anzahl_10cent * 0.1;
+
+  const aktuellesRueckgeld = aktuellesGegeben - aktuelleGesamtsumme;
+
   return (
     <div className="App">
       {/* Menü-Button oben rechts */}
@@ -487,11 +501,23 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
         </div>
         <div className="summary-card">
           <h2>Gegeben:</h2>
-          <div className="value">{(kasse.gegeben || 0).toFixed(2)}€</div>
+          <div className="value">{aktuellesGegeben.toFixed(2)}€</div>
         </div>
         <div className="summary-card">
           <h2>Rückgeld:</h2>
-          <div className="value">{(kasse.rueckgeld || 0).toFixed(2)}€</div>
+          <div
+            className="value"
+            style={{
+              color:
+                aktuellesRueckgeld < 0
+                  ? "#e53e3e"
+                  : aktuellesRueckgeld > 0
+                  ? "#38a169"
+                  : "#2d3748",
+            }}
+          >
+            {aktuellesRueckgeld.toFixed(2)}€
+          </div>
         </div>
         <button className="next-button" onClick={handleZahlungAbschliessen}>
           =&gt; nächster
@@ -505,6 +531,12 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             <h3>Kinder</h3>
             <div className="sales-emoji">👶</div>
             <div className="counter-buttons">
+              <button
+                className="counter-button"
+                onClick={() => incrementCounter("anzahl_kinder", 1)}
+              >
+                +1
+              </button>
               <button
                 className="counter-button"
                 onClick={() => setCounter("anzahl_kinder", 3)}
@@ -543,6 +575,12 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             <h3>Erwach</h3>
             <div className="sales-emoji">👨</div>
             <div className="counter-buttons">
+              <button
+                className="counter-button"
+                onClick={() => incrementCounter("anzahl_erwachsene", 1)}
+              >
+                +1
+              </button>
               <button
                 className="counter-button"
                 onClick={() => setCounter("anzahl_erwachsene", 3)}
@@ -735,16 +773,19 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
               img: "10cent.png",
             },
           ].map((item) => (
-            <div key={item.field} className="money-item">
+            <div 
+              key={item.field} 
+              className="money-item"
+              onClick={() =>
+                incrementCounter(item.field as keyof Kassenabrechnung, 1)
+              }
+            >
               <div className="count">
                 {kasse[item.field as keyof Kassenabrechnung]} x
               </div>
               <img
                 src={`/images/money/${item.img}`}
                 alt={item.label}
-                onClick={() =>
-                  incrementCounter(item.field as keyof Kassenabrechnung, 1)
-                }
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                   const nextEl = e.currentTarget
@@ -756,7 +797,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                   height: "60px",
                   objectFit: "contain",
                   borderRadius: "8px",
-                  cursor: "pointer",
+                  pointerEvents: "none",
                 }}
               />
               <div className="label" style={{ display: "none" }}>
@@ -788,7 +829,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "8px",
-              fontSize: "0.85rem",
+              fontSize: "1.1rem",
             }}
           >
             <div>
