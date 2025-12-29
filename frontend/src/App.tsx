@@ -16,6 +16,11 @@ function App() {
   const [showNeueAbrechnungModal, setShowNeueAbrechnungModal] = useState(false);
   const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
   const [showMenuModal, setShowMenuModal] = useState(false);
+  const [letzterVerkauf, setLetzterVerkauf] = useState({
+    kinder: 0,
+    erwachsene: 0,
+    tee: 0,
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -205,6 +210,13 @@ function App() {
       (kasse.gesamt_erwachsene || 0) + (kasse.anzahl_erwachsene || 0);
     const neueGesamtTee = (kasse.gesamt_tee || 0) + (kasse.anzahl_tee || 0);
     const neuesGesamtBargeld = (kasse.gesamt_bargeld || 0) + aktuellesBargeld;
+
+    // Speichere aktuellen Verkauf als letzten Verkauf
+    setLetzterVerkauf({
+      kinder: kasse.anzahl_kinder || 0,
+      erwachsene: kasse.anzahl_erwachsene || 0,
+      tee: kasse.anzahl_tee || 0,
+    });
 
     // Zahlung speichern, aktuelle Zähler zurücksetzen, Gesamtsummen aktualisieren
     await updateKasse({
@@ -681,11 +693,11 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             <div style={{ textAlign: "right" }}>
               <strong>letzte Verkauf:</strong>
               <br />
-              {kasse.anzahl_kinder || 0} x Kaffee
+              {letzterVerkauf.tee} x Kaffee
               <br />
-              {kasse.anzahl_erwachsene || 0} x Erwachsene
+              {letzterVerkauf.erwachsene} x Erwachsene
               <br />
-              {kasse.anzahl_tee || 0} x Kinder
+              {letzterVerkauf.kinder} x Kinder
             </div>
           </div>
         </div>
