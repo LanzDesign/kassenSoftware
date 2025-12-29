@@ -808,9 +808,18 @@ Erstellt: ${new Date().toLocaleString("de-DE")} von ${username}
               <span>Ist:</span>
               <strong>{(kasse.bargeld_gesamt || 0).toFixed(2)}€</strong>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #e2e8f0", paddingTop: "8px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderTop: "1px solid #e2e8f0",
+                paddingTop: "8px",
+              }}
+            >
               <span>Summe Spende:</span>
-              <strong style={{ color: "#f6ad55" }}>{(kasse.rueckgeldspende || 0).toFixed(2)}€</strong>
+              <strong style={{ color: "#f6ad55" }}>
+                {(kasse.rueckgeldspende || 0).toFixed(2)}€
+              </strong>
             </div>
           </div>
           <button className="action-button reset" onClick={handleReset}>
