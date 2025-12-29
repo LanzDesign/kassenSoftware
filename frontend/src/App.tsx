@@ -529,14 +529,14 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           <div className="sales-item kinder">
             <div className="counter-display">{kasse.anzahl_kinder} x</div>
             <h3>Kinder</h3>
-            <div className="sales-emoji">👶</div>
+            <div 
+              className="sales-emoji" 
+              onClick={() => incrementCounter("anzahl_kinder", 1)}
+              style={{ cursor: "pointer" }}
+            >
+              👶
+            </div>
             <div className="counter-buttons">
-              <button
-                className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 1)}
-              >
-                +1
-              </button>
               <button
                 className="counter-button"
                 onClick={() => setCounter("anzahl_kinder", 3)}
@@ -573,14 +573,14 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           <div className="sales-item erwachsen">
             <div className="counter-display">{kasse.anzahl_erwachsene} x</div>
             <h3>Erwach</h3>
-            <div className="sales-emoji">👨</div>
+            <div 
+              className="sales-emoji" 
+              onClick={() => incrementCounter("anzahl_erwachsene", 1)}
+              style={{ cursor: "pointer" }}
+            >
+              👨
+            </div>
             <div className="counter-buttons">
-              <button
-                className="counter-button"
-                onClick={() => incrementCounter("anzahl_erwachsene", 1)}
-              >
-                +1
-              </button>
               <button
                 className="counter-button"
                 onClick={() => setCounter("anzahl_erwachsene", 3)}
