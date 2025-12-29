@@ -156,6 +156,14 @@ function App() {
     updateKasse({ [field]: newValue });
   };
 
+  const setCounter = (
+    field: keyof Kassenabrechnung,
+    value: number
+  ) => {
+    if (!kasse) return;
+    updateKasse({ [field]: value });
+  };
+
   const handleReset = async () => {
     if (!kasse || !kasse.id) return;
     if (window.confirm("Möchten Sie wirklich alle Zähler zurücksetzen?")) {
@@ -482,11 +490,19 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
         </div>
       </div>
 
-      {/* Top Section: Gesamtsumme links, Nächster Button rechts */}
+      {/* Top Section: Gesamtsumme, Gegeben, Rückgeld, Nächster Button */}
       <div className="top-section">
         <div className="summary-card">
           <h2>Gesamtsumme:</h2>
           <div className="value">{aktuelleGesamtsumme.toFixed(2)}€</div>
+        </div>
+        <div className="summary-card">
+          <h2>Gegeben:</h2>
+          <div className="value">{(kasse.gegeben || 0).toFixed(2)}€</div>
+        </div>
+        <div className="summary-card">
+          <h2>Rückgeld:</h2>
+          <div className="value">{(kasse.rueckgeld || 0).toFixed(2)}€</div>
         </div>
         <button className="next-button" onClick={handleZahlungAbschliessen}>
           =&gt; nächster
@@ -502,25 +518,25 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             <div className="counter-buttons">
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 3)}
+                onClick={() => setCounter("anzahl_kinder", 3)}
               >
                 3
               </button>
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 4)}
+                onClick={() => setCounter("anzahl_kinder", 4)}
               >
                 4
               </button>
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 5)}
+                onClick={() => setCounter("anzahl_kinder", 5)}
               >
                 5
               </button>
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 6)}
+                onClick={() => setCounter("anzahl_kinder", 6)}
               >
                 6
               </button>
@@ -540,19 +556,19 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             <div className="counter-buttons">
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_erwachsene", 3)}
+                onClick={() => setCounter("anzahl_erwachsene", 3)}
               >
                 3
               </button>
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_erwachsene", 4)}
+                onClick={() => setCounter("anzahl_erwachsene", 4)}
               >
                 4
               </button>
               <button
                 className="counter-button"
-                onClick={() => incrementCounter("anzahl_erwachsene", 5)}
+                onClick={() => setCounter("anzahl_erwachsene", 5)}
               >
                 5
               </button>
