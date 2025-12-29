@@ -471,28 +471,6 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
 
   return (
     <div className="App">
-      {/* Menü-Button oben rechts */}
-      <button
-        onClick={() => setShowMenuModal(true)}
-        style={{
-          position: "fixed",
-          top: "10px",
-          right: "10px",
-          background: "#2c5282",
-          color: "white",
-          border: "none",
-          borderRadius: "50%",
-          width: "50px",
-          height: "50px",
-          fontSize: "1.5rem",
-          cursor: "pointer",
-          zIndex: 100,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-        }}
-      >
-        ☰
-      </button>
-
       {/* Top Section: Gesamtsumme, Gegeben, Rückgeld, Nächster Button */}
       <div className="top-section">
         <div className="summary-card">
@@ -528,15 +506,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
         <div className="sales-grid">
           <div className="sales-item kinder">
             <div className="counter-display">{kasse.anzahl_kinder} x</div>
-            <h3 
+            <h3
               onClick={() => incrementCounter("anzahl_kinder", 1)}
               style={{ cursor: "pointer" }}
             >
               Kinder
             </h3>
-            <div className="sales-emoji">
-              👶
-            </div>
+            <div className="sales-emoji">👶</div>
             <div className="counter-buttons">
               <button
                 className="counter-button"
@@ -573,15 +549,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
 
           <div className="sales-item erwachsen">
             <div className="counter-display">{kasse.anzahl_erwachsene} x</div>
-            <h3 
+            <h3
               onClick={() => incrementCounter("anzahl_erwachsene", 1)}
               style={{ cursor: "pointer" }}
             >
               Erwach
             </h3>
-            <div className="sales-emoji">
-              👨
-            </div>
+            <div className="sales-emoji">👨</div>
             <div className="counter-buttons">
               <button
                 className="counter-button"
@@ -775,8 +749,8 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
               img: "10cent.png",
             },
           ].map((item) => (
-            <div 
-              key={item.field} 
+            <div
+              key={item.field}
               className="money-item"
               onClick={() =>
                 incrementCounter(item.field as keyof Kassenabrechnung, 1)
@@ -894,9 +868,9 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           })}
         </span>
         <button
-          onClick={handleLogout}
+          onClick={() => setShowMenuModal(true)}
           style={{
-            background: "#e53e3e",
+            background: "#2c5282",
             color: "white",
             border: "none",
             padding: "6px 12px",
@@ -906,7 +880,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             fontWeight: "bold",
           }}
         >
-          🚪 Abmelden
+          ☰ Menü
         </button>
       </div>
 
@@ -1003,6 +977,24 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                 }}
               >
                 ➕ Neue Abrechnung
+              </button>
+              <button
+                onClick={() => {
+                  setShowMenuModal(false);
+                  handleLogout();
+                }}
+                style={{
+                  padding: "15px",
+                  background: "#e53e3e",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                🚪 Abmelden
               </button>
               <button
                 onClick={() => setShowMenuModal(false)}
