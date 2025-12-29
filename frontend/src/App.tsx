@@ -353,31 +353,6 @@ Differenz:             ${(
     ).toFixed(2)}€
 
 ───────────────────────────────────────
-BARGELD-ZÄHLUNG
-───────────────────────────────────────
-50€:   ${kasse.anzahl_50euro} x 50.00€ = ${(kasse.anzahl_50euro * 50).toFixed(
-      2
-    )}€
-20€:   ${kasse.anzahl_20euro} x 20.00€ = ${(kasse.anzahl_20euro * 20).toFixed(
-      2
-    )}€
-10€:   ${kasse.anzahl_10euro} x 10.00€ = ${(kasse.anzahl_10euro * 10).toFixed(
-      2
-    )}€
-5€:    ${kasse.anzahl_5euro} x 5.00€ = ${(kasse.anzahl_5euro * 5).toFixed(2)}€
-2€:    ${kasse.anzahl_2euro} x 2.00€ = ${(kasse.anzahl_2euro * 2).toFixed(2)}€
-1€:    ${kasse.anzahl_1euro} x 1.00€ = ${(kasse.anzahl_1euro * 1).toFixed(2)}€
-50¢:   ${kasse.anzahl_50cent} x 0.50€ = ${(kasse.anzahl_50cent * 0.5).toFixed(
-      2
-    )}€
-20¢:   ${kasse.anzahl_20cent} x 0.20€ = ${(kasse.anzahl_20cent * 0.2).toFixed(
-      2
-    )}€
-10¢:   ${kasse.anzahl_10cent} x 0.10€ = ${(kasse.anzahl_10cent * 0.1).toFixed(
-      2
-    )}€
-
-───────────────────────────────────────
 RÜCKGELDSPENDE
 ───────────────────────────────────────
 Gespendetes Rückgeld:  ${(kasse.rueckgeldspende || 0).toFixed(2)}€
@@ -940,7 +915,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                   cursor: "pointer",
                 }}
               >
-                📄 Bericht erstellen & kopieren
+                � Bericht teilen
               </button>
               <button
                 onClick={() => {
