@@ -32,14 +32,10 @@ function Login({ onLoginSuccess }: LoginProps) {
       <div className="login-box">
         <h1>🍽️ Kassensoftware</h1>
         <h2>FECG Lahr - Sonntagsküche</h2>
-        
+
         <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="login-error">
-              ⚠️ {error}
-            </div>
-          )}
-          
+          {error && <div className="login-error">⚠️ {error}</div>}
+
           <div className="form-group">
             <label htmlFor="username">Benutzername</label>
             <input

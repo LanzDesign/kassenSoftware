@@ -5,7 +5,9 @@ import { kassenService, KassenEinstellungen, authService } from "./api";
 import Login from "./Login";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    authService.isAuthenticated()
+  );
   const [kasse, setKasse] = useState<Kassenabrechnung | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -451,7 +453,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
     <div className="App">
       {/* Header */}
       <div className="header">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <div>
             <h1>Sonntagsküche - FECG-Lahr</h1>
             <p>Datum: {new Date(kasse.datum).toLocaleDateString("de-DE")}</p>

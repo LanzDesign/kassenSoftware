@@ -16,7 +16,7 @@ const getCSRFToken = (): string | null => {
 
 // Helper function to get auth token from localStorage
 const getAuthToken = (): string | null => {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem("authToken");
 };
 
 const api = axios.create({
@@ -33,12 +33,12 @@ api.interceptors.request.use((config) => {
   if (csrfToken) {
     config.headers["X-CSRFToken"] = csrfToken;
   }
-  
+
   const authToken = getAuthToken();
   if (authToken) {
     config.headers["Authorization"] = `Token ${authToken}`;
   }
-  
+
   return config;
 });
 
@@ -47,8 +47,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('authToken');
-      window.location.href = '/';
+      localStorage.removeItem("authToken");
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }
@@ -120,10 +120,13 @@ export const kassenService = {
 
 // Auth Service
 export const authService = {
-  login: async (username: string, password: string): Promise<{token: string, username: string, user_id: number}> => {
+  login: async (
+    username: string,
+    password: string
+  ): Promise<{ token: string; username: string; user_id: number }> => {
     const response = await api.post("/login/", { username, password });
     const { token } = response.data;
-    localStorage.setItem('authToken', token);
+    localStorage.setItem("authToken", token);
     return response.data;
   },
 
@@ -133,11 +136,11 @@ export const authService = {
     } catch (err) {
       // Ignoriere Fehler beim Logout
     }
-    localStorage.removeItem('authToken');
+    localStorage.removeItem("authToken");
   },
 
   isAuthenticated: (): boolean => {
-    return !!localStorage.getItem('authToken');
+    return !!localStorage.getItem("authToken");
   },
 };
 

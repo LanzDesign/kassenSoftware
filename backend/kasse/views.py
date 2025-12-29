@@ -53,6 +53,13 @@ def csrf_token_view(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
+def health_check_view(request):
+    """Health Check Endpoint für Docker"""
+    return Response({'status': 'healthy'})
+
+
+@api_view(['GET'])
 def einstellungen_view(request):
     """Gibt die Kassen-Einstellungen zurück"""
     einstellungen = KassenEinstellungen.get_einstellungen()
