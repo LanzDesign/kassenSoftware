@@ -16,6 +16,7 @@ function App() {
   const [showNeueAbrechnungModal, setShowNeueAbrechnungModal] = useState(false);
   const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
   const [showMenuModal, setShowMenuModal] = useState(false);
+  const [showResult, setShowResult] = useState(false);
   const [letzterVerkauf, setLetzterVerkauf] = useState({
     kinder: 0,
     erwachsene: 0,
@@ -239,6 +240,7 @@ function App() {
       anzahl_20cent: 0,
       anzahl_10cent: 0,
     });
+    setShowResult(true);
   };
 
   const handleRueckgeldspende = async () => {
@@ -325,9 +327,17 @@ KASSENABRECHNUNG von Kasse1
 ═════════════════════
 VERKÄUFE
 ─────────────────────
-Kinder:      ${kasse.gesamt_kinder || 0} x ${kasse.preis_kinder.toFixed(2)}€ = ${((kasse.gesamt_kinder || 0) * kasse.preis_kinder).toFixed(2)}€
-Erwachsene:  ${kasse.gesamt_erwachsene || 0} x ${kasse.preis_erwachsene.toFixed(2)}€ = ${((kasse.gesamt_erwachsene || 0) * kasse.preis_erwachsene).toFixed(2)}€
-Tee:         ${kasse.gesamt_tee || 0} x ${kasse.preis_tee.toFixed(2)}€ = ${((kasse.gesamt_tee || 0) * kasse.preis_tee).toFixed(2)}€
+Kinder:      ${kasse.gesamt_kinder || 0} x ${kasse.preis_kinder.toFixed(
+      2
+    )}€ = ${((kasse.gesamt_kinder || 0) * kasse.preis_kinder).toFixed(2)}€
+Erwachsene:  ${kasse.gesamt_erwachsene || 0} x ${kasse.preis_erwachsene.toFixed(
+      2
+    )}€ = ${((kasse.gesamt_erwachsene || 0) * kasse.preis_erwachsene).toFixed(
+      2
+    )}€
+Tee:         ${kasse.gesamt_tee || 0} x ${kasse.preis_tee.toFixed(2)}€ = ${(
+      (kasse.gesamt_tee || 0) * kasse.preis_tee
+    ).toFixed(2)}€
 Rückgeldspende  = ${(kasse.rueckgeldspende || 0).toFixed(2)}€
 ─────────────────────
 KASSE
@@ -558,6 +568,94 @@ Erstellt: ${new Date().toLocaleString("de-DE")} von ${username}
         </div>
       </div>
 
+      {/* Zahlungs-Ergebnis Popup */}
+      {showResult && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "30px",
+              borderRadius: "15px",
+              minWidth: "400px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            }}
+          >
+            <h2
+              style={{
+                textAlign: "center",
+                marginBottom: "20px",
+                color: "#2c5282",
+              }}
+            >
+              💰 Zahlung abgeschlossen
+            </h2>
+            <div
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                color: "#48bb78",
+                textAlign: "center",
+                marginBottom: "20px",
+              }}
+            >
+              Rückgeld: {(kasse.rueckgeld || 0).toFixed(2)}€
+            </div>
+            <div style={{ display: "flex", gap: "10px" }}>
+              {kasse.rueckgeld > 0 && (
+                <button
+                  onClick={() => {
+                    handleRueckgeldspende();
+                    setShowResult(false);
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: "15px",
+                    background: "#f6ad55",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontSize: "1.1rem",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                >
+                  ❤️ Rückgeldspende
+                </button>
+              )}
+              <button
+                onClick={() => setShowResult(false)}
+                style={{
+                  flex: 1,
+                  padding: "15px",
+                  background: "#2c5282",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1.1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                ✓ OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bargeld-Zählung */}
       <div className="money-section">
         <div className="money-grid">
@@ -683,17 +781,9 @@ Erstellt: ${new Date().toLocaleString("de-DE")} von ${username}
         </div>
 
         <div className="action-buttons">
-          <button className="action-button reset" onClick={handleReset}>
+          <button className="action-button reset" onClick={handleReset} style={{ gridColumn: "1 / -1" }}>
             <div style={{ fontSize: "2.5rem", marginBottom: "5px" }}>🔄</div>
             <div>Reset</div>
-          </button>
-          <button
-            className="action-button save"
-            onClick={handleRueckgeldspende}
-            style={{ background: "#2c5282" }}
-          >
-            <div style={{ fontSize: "2.5rem", marginBottom: "5px" }}>💰</div>
-            <div>Rückgeldspende</div>
           </button>
         </div>
       </div>
