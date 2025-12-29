@@ -14,6 +14,11 @@ const getCSRFToken = (): string | null => {
   return null;
 };
 
+// Helper function to get auth token from localStorage
+const getAuthToken = (): string | null => {
+  return localStorage.getItem('authToken');
+};
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -22,14 +27,32 @@ const api = axios.create({
   withCredentials: true, // Enable sending cookies
 });
 
-// Add CSRF token to every request
+// Add CSRF token and Auth token to every request
 api.interceptors.request.use((config) => {
   const csrfToken = getCSRFToken();
   if (csrfToken) {
     config.headers["X-CSRFToken"] = csrfToken;
   }
+  
+  const authToken = getAuthToken();
+  if (authToken) {
+    config.headers["Authorization"] = `Token ${authToken}`;
+  }
+  
   return config;
 });
+
+// Handle 401 errors (unauthorized) by redirecting to login
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/';
+    }
+    return Promise.reject(error);
+  }
+);
 
 export interface KassenEinstellungen {
   kassenstand_anfang_default: string;
@@ -92,6 +115,29 @@ export const kassenService = {
   aktualisiere_preise: async (id: number): Promise<Kassenabrechnung> => {
     const response = await api.post(`/abrechnungen/${id}/aktualisiere_preise/`);
     return response.data;
+  },
+};
+
+// Auth Service
+export const authService = {
+  login: async (username: string, password: string): Promise<{token: string, username: string, user_id: number}> => {
+    const response = await api.post("/login/", { username, password });
+    const { token } = response.data;
+    localStorage.setItem('authToken', token);
+    return response.data;
+  },
+
+  logout: async (): Promise<void> => {
+    try {
+      await api.post("/logout/");
+    } catch (err) {
+      // Ignoriere Fehler beim Logout
+    }
+    localStorage.removeItem('authToken');
+  },
+
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('authToken');
   },
 };
 

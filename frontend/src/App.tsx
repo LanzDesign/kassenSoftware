@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Kassenabrechnung } from "./types";
-import { kassenService, KassenEinstellungen } from "./api";
+import { kassenService, KassenEinstellungen, authService } from "./api";
+import Login from "./Login";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
   const [kasse, setKasse] = useState<Kassenabrechnung | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,8 +17,23 @@ function App() {
   const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
 
   useEffect(() => {
-    initializeApp();
-  }, []);
+    if (isAuthenticated) {
+      initializeApp();
+    }
+  }, [isAuthenticated]);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm("Möchten Sie sich wirklich abmelden?")) {
+      await authService.logout();
+      setIsAuthenticated(false);
+      setKasse(null);
+      setEinstellungen(null);
+    }
+  };
 
   const initializeApp = async () => {
     try {
@@ -399,6 +416,10 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
     }
   };
 
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
+
   if (loading) {
     return <div className="loading">Lädt Kassensystem...</div>;
   }
@@ -430,8 +451,27 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
     <div className="App">
       {/* Header */}
       <div className="header">
-        <h1>Sonntagsküche - FECG-Lahr</h1>
-        <p>Datum: {new Date(kasse.datum).toLocaleDateString("de-DE")}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <h1>Sonntagsküche - FECG-Lahr</h1>
+            <p>Datum: {new Date(kasse.datum).toLocaleDateString("de-DE")}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            style={{
+              background: "#e53e3e",
+              color: "white",
+              border: "none",
+              padding: "8px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+            }}
+          >
+            🚪 Abmelden
+          </button>
+        </div>
       </div>
 
       {/* Top Section: Gesamtsumme links, Nächster Button rechts */}

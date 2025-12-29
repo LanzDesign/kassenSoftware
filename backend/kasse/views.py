@@ -1,14 +1,52 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from .models import Kassenabrechnung, KassenEinstellungen
 from .serializers import KassenabrechnungSerializer
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    """Login-Endpoint für Token-Authentication"""
+    username = request.data.get('username')
+    password = request.data.get('password')
+    
+    if not username or not password:
+        return Response({'error': 'Username und Passwort erforderlich'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    user = authenticate(username=username, password=password)
+    
+    if user:
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'username': user.username,
+            'user_id': user.id
+        })
+    else:
+        return Response({'error': 'Ungültige Anmeldedaten'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['POST'])
+def logout_view(request):
+    """Logout-Endpoint - löscht Token"""
+    if request.user.is_authenticated:
+        try:
+            request.user.auth_token.delete()
+        except:
+            pass
+    return Response({'detail': 'Erfolgreich abgemeldet'})
+
+
 @ensure_csrf_cookie
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def csrf_token_view(request):
     """Stellt einen CSRF-Token bereit"""
     return Response({'detail': 'CSRF cookie set'})
