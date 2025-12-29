@@ -781,7 +781,39 @@ Erstellt: ${new Date().toLocaleString("de-DE")} von ${username}
         </div>
 
         <div className="action-buttons">
-          <button className="action-button reset" onClick={handleReset} style={{ gridColumn: "1 / -1" }}>
+          <div
+            style={{
+              background: "white",
+              padding: "15px",
+              borderRadius: "12px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              fontSize: "0.95rem",
+            }}
+          >
+            <div style={{ fontWeight: "bold", marginBottom: "5px" }}>
+              Kassenübersicht
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>Kasse Start:</span>
+              <strong>{kasse.kassenstand_anfang.toFixed(2)}€</strong>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>Soll:</span>
+              <strong>{(kasse.kassenstand_soll || 0).toFixed(2)}€</strong>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>Ist:</span>
+              <strong>{(kasse.bargeld_gesamt || 0).toFixed(2)}€</strong>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #e2e8f0", paddingTop: "8px" }}>
+              <span>Summe Spende:</span>
+              <strong style={{ color: "#f6ad55" }}>{(kasse.rueckgeldspende || 0).toFixed(2)}€</strong>
+            </div>
+          </div>
+          <button className="action-button reset" onClick={handleReset}>
             <div style={{ fontSize: "2.5rem", marginBottom: "5px" }}>🔄</div>
             <div>Reset</div>
           </button>
