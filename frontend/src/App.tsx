@@ -11,10 +11,8 @@ function App() {
   const [kasse, setKasse] = useState<Kassenabrechnung | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showResult, setShowResult] = useState(false);
   const [einstellungen, setEinstellungen] =
     useState<KassenEinstellungen | null>(null);
-  const [letzteKosten, setLetzteKosten] = useState<number>(0);
   const [showNeueAbrechnungModal, setShowNeueAbrechnungModal] = useState(false);
   const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
   const [showMenuModal, setShowMenuModal] = useState(false);
@@ -200,9 +198,6 @@ function App() {
       return;
     }
 
-    // Speichere Kosten für Popup-Anzeige (vor dem Reset)
-    setLetzteKosten(aktuelleGesamtsumme);
-
     // Addiere aktuelle Verkäufe zu Tagesgesamtsummen
     const neueGesamtKinder =
       (kasse.gesamt_kinder || 0) + (kasse.anzahl_kinder || 0);
@@ -232,29 +227,20 @@ function App() {
       anzahl_20cent: 0,
       anzahl_10cent: 0,
     });
-    setShowResult(true);
   };
 
   const handleRueckgeldspende = async () => {
     if (!kasse || !kasse.id) return;
     const rueckgeld = kasse.rueckgeld || 0;
     if (rueckgeld <= 0) {
-      alert("Kein Rückgeld zum Spenden vorhanden!");
       return;
     }
-    if (
-      window.confirm(
-        `Rückgeld von ${rueckgeld.toFixed(2)}€ als Spende verbuchen?`
-      )
-    ) {
-      const neueSpende = (kasse.rueckgeldspende || 0) + rueckgeld;
-      await updateKasse({
-        rueckgeldspende: neueSpende,
-        rueckgeld: 0,
-        gegeben: 0,
-      });
-      alert(`Vielen Dank für die Spende von ${rueckgeld.toFixed(2)}€!`);
-    }
+    const neueSpende = (kasse.rueckgeldspende || 0) + rueckgeld;
+    await updateKasse({
+      rueckgeldspende: neueSpende,
+      rueckgeld: 0,
+      gegeben: 0,
+    });
   };
 
   const handleNeueAbrechnung = () => {
@@ -579,106 +565,6 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           </div>
         </div>
       </div>
-
-      {/* Zahlungs-Ergebnis Popup */}
-      {showResult && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "rgba(0,0,0,0.7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: "30px",
-              borderRadius: "15px",
-              minWidth: "400px",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-            }}
-          >
-            <h2
-              style={{
-                textAlign: "center",
-                marginBottom: "20px",
-                color: "#2c5282",
-              }}
-            >
-              💰 Zahlung
-            </h2>
-            <div style={{ fontSize: "1.2rem", marginBottom: "15px" }}>
-              <strong>Kosten:</strong>{" "}
-              <span style={{ float: "right" }}>{letzteKosten.toFixed(2)}€</span>
-            </div>
-            <div style={{ fontSize: "1.2rem", marginBottom: "15px" }}>
-              <strong>Gegeben:</strong>{" "}
-              <span style={{ float: "right" }}>
-                {(kasse.gegeben || 0).toFixed(2)}€
-              </span>
-            </div>
-            <hr style={{ margin: "15px 0" }} />
-            <div
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
-                color: "#48bb78",
-              }}
-            >
-              <strong>Rückgeld:</strong>{" "}
-              <span style={{ float: "right" }}>
-                {(kasse.rueckgeld || 0).toFixed(2)}€
-              </span>
-            </div>
-            <div style={{ marginTop: "25px", display: "flex", gap: "10px" }}>
-              {kasse.rueckgeld > 0 && (
-                <button
-                  onClick={() => {
-                    handleRueckgeldspende();
-                    setShowResult(false);
-                  }}
-                  style={{
-                    flex: 1,
-                    padding: "12px",
-                    background: "#f6ad55",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontSize: "1rem",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                  }}
-                >
-                  ❤️ Als Spende
-                </button>
-              )}
-              <button
-                onClick={() => setShowResult(false)}
-                style={{
-                  flex: 1,
-                  padding: "12px",
-                  background: "#2c5282",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                }}
-              >
-                ✓ OK
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Bargeld-Zählung */}
       <div className="money-section">
