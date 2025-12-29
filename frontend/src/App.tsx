@@ -8,7 +8,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [einstellungen, setEinstellungen] = useState<KassenEinstellungen | null>(null);
+  const [einstellungen, setEinstellungen] =
+    useState<KassenEinstellungen | null>(null);
   const [letzteKosten, setLetzteKosten] = useState<number>(0);
   const [showNeueAbrechnungModal, setShowNeueAbrechnungModal] = useState(false);
   const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
@@ -151,43 +152,43 @@ function App() {
   const handleZahlungAbschliessen = () => {
     if (!kasse) return;
     // Berechne aktuelle Gesamtsumme der aktuellen Transaktion
-    const aktuelleGesamtsumme = (
-      (kasse.anzahl_kinder * kasse.preis_kinder) +
-      (kasse.anzahl_erwachsene * kasse.preis_erwachsene) +
-      (kasse.anzahl_tee * kasse.preis_tee)
-    );
-    
+    const aktuelleGesamtsumme =
+      kasse.anzahl_kinder * kasse.preis_kinder +
+      kasse.anzahl_erwachsene * kasse.preis_erwachsene +
+      kasse.anzahl_tee * kasse.preis_tee;
+
     // Berechne aktuelles Bargeld
-    const aktuellesBargeld = (
-      (kasse.anzahl_50euro * 50) +
-      (kasse.anzahl_20euro * 20) +
-      (kasse.anzahl_10euro * 10) +
-      (kasse.anzahl_5euro * 5) +
-      (kasse.anzahl_2euro * 2) +
-      (kasse.anzahl_1euro * 1) +
-      (kasse.anzahl_50cent * 0.5) +
-      (kasse.anzahl_20cent * 0.2) +
-      (kasse.anzahl_10cent * 0.1)
-    );
-    
+    const aktuellesBargeld =
+      kasse.anzahl_50euro * 50 +
+      kasse.anzahl_20euro * 20 +
+      kasse.anzahl_10euro * 10 +
+      kasse.anzahl_5euro * 5 +
+      kasse.anzahl_2euro * 2 +
+      kasse.anzahl_1euro * 1 +
+      kasse.anzahl_50cent * 0.5 +
+      kasse.anzahl_20cent * 0.2 +
+      kasse.anzahl_10cent * 0.1;
+
     const rueckgeld = aktuellesBargeld - aktuelleGesamtsumme;
     if (rueckgeld < 0) {
       alert("Gegebenes Bargeld ist zu niedrig!");
       return;
     }
-    
+
     // Speichere Kosten für Popup-Anzeige (vor dem Reset)
     setLetzteKosten(aktuelleGesamtsumme);
-    
+
     // Addiere aktuelle Verkäufe zu Tagesgesamtsummen
-    const neueGesamtKinder = (kasse.gesamt_kinder || 0) + (kasse.anzahl_kinder || 0);
-    const neueGesamtErwachsene = (kasse.gesamt_erwachsene || 0) + (kasse.anzahl_erwachsene || 0);
+    const neueGesamtKinder =
+      (kasse.gesamt_kinder || 0) + (kasse.anzahl_kinder || 0);
+    const neueGesamtErwachsene =
+      (kasse.gesamt_erwachsene || 0) + (kasse.anzahl_erwachsene || 0);
     const neueGesamtTee = (kasse.gesamt_tee || 0) + (kasse.anzahl_tee || 0);
     const neuesGesamtBargeld = (kasse.gesamt_bargeld || 0) + aktuellesBargeld;
-    
+
     // Zahlung speichern, aktuelle Zähler zurücksetzen, Gesamtsummen aktualisieren
-    updateKasse({ 
-      gegeben: aktuellesBargeld, 
+    updateKasse({
+      gegeben: aktuellesBargeld,
       rueckgeld,
       gesamt_kinder: neueGesamtKinder,
       gesamt_erwachsene: neueGesamtErwachsene,
@@ -204,7 +205,7 @@ function App() {
       anzahl_1euro: 0,
       anzahl_50cent: 0,
       anzahl_20cent: 0,
-      anzahl_10cent: 0
+      anzahl_10cent: 0,
     });
     setShowResult(true);
   };
@@ -272,6 +273,23 @@ function App() {
       alert("Neue Abrechnung erfolgreich erstellt!");
     } catch (err: any) {
       alert("Fehler beim Erstellen der neuen Abrechnung: " + err.message);
+    }
+  };
+
+  const handlePreiseAktualisieren = async () => {
+    if (!kasse || !kasse.id) return;
+    if (
+      window.confirm(
+        "Preise aus den Einstellungen übernehmen? Dies aktualisiert die Preise für diese Abrechnung."
+      )
+    ) {
+      try {
+        const aktualisiert = await kassenService.aktualisiere_preise(kasse.id);
+        setKasse(normalizeKasse(aktualisiert));
+        alert("Preise erfolgreich aktualisiert!");
+      } catch (err: any) {
+        alert("Fehler beim Aktualisieren der Preise: " + err.message);
+      }
     }
   };
 
@@ -403,11 +421,10 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
   }
 
   // Aktuelle Gesamtsumme (nur für die laufende Transaktion)
-  const aktuelleGesamtsumme = (
-    (kasse.anzahl_kinder * kasse.preis_kinder) +
-    (kasse.anzahl_erwachsene * kasse.preis_erwachsene) +
-    (kasse.anzahl_tee * kasse.preis_tee)
-  );
+  const aktuelleGesamtsumme =
+    kasse.anzahl_kinder * kasse.preis_kinder +
+    kasse.anzahl_erwachsene * kasse.preis_erwachsene +
+    kasse.anzahl_tee * kasse.preis_tee;
 
   return (
     <div className="App">
@@ -423,10 +440,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           <h2>Gesamtsumme:</h2>
           <div className="value">{aktuelleGesamtsumme.toFixed(2)}€</div>
         </div>
-        <button
-          className="next-button"
-          onClick={handleZahlungAbschliessen}
-        >
+        <button className="next-button" onClick={handleZahlungAbschliessen}>
           💰 Zahlung
         </button>
       </div>
@@ -558,35 +572,60 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
 
       {/* Zahlungs-Ergebnis Popup */}
       {showResult && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,0.7)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000
-        }}>
-          <div style={{
-            background: "white",
-            padding: "30px",
-            borderRadius: "15px",
-            minWidth: "400px",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.3)"
-          }}>
-            <h2 style={{ textAlign: "center", marginBottom: "20px", color: "#2c5282" }}>💰 Zahlung</h2>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "30px",
+              borderRadius: "15px",
+              minWidth: "400px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            }}
+          >
+            <h2
+              style={{
+                textAlign: "center",
+                marginBottom: "20px",
+                color: "#2c5282",
+              }}
+            >
+              💰 Zahlung
+            </h2>
             <div style={{ fontSize: "1.2rem", marginBottom: "15px" }}>
-              <strong>Kosten:</strong> <span style={{ float: "right" }}>{letzteKosten.toFixed(2)}€</span>
+              <strong>Kosten:</strong>{" "}
+              <span style={{ float: "right" }}>{letzteKosten.toFixed(2)}€</span>
             </div>
             <div style={{ fontSize: "1.2rem", marginBottom: "15px" }}>
-              <strong>Gegeben:</strong> <span style={{ float: "right" }}>{(kasse.gegeben || 0).toFixed(2)}€</span>
+              <strong>Gegeben:</strong>{" "}
+              <span style={{ float: "right" }}>
+                {(kasse.gegeben || 0).toFixed(2)}€
+              </span>
             </div>
             <hr style={{ margin: "15px 0" }} />
-            <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#48bb78" }}>
-              <strong>Rückgeld:</strong> <span style={{ float: "right" }}>{(kasse.rueckgeld || 0).toFixed(2)}€</span>
+            <div
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                color: "#48bb78",
+              }}
+            >
+              <strong>Rückgeld:</strong>{" "}
+              <span style={{ float: "right" }}>
+                {(kasse.rueckgeld || 0).toFixed(2)}€
+              </span>
             </div>
             <div style={{ marginTop: "25px", display: "flex", gap: "10px" }}>
               {kasse.rueckgeld > 0 && (
@@ -604,7 +643,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                     borderRadius: "8px",
                     fontSize: "1rem",
                     fontWeight: "bold",
-                    cursor: "pointer"
+                    cursor: "pointer",
                   }}
                 >
                   ❤️ Als Spende
@@ -621,7 +660,7 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                   borderRadius: "8px",
                   fontSize: "1rem",
                   fontWeight: "bold",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 ✓ OK
@@ -749,11 +788,20 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             }}
           >
             <div>
-              <strong>{kasse.gesamt_tee || 0} x {einstellungen?.bezeichnung_position3 || "Tee"}</strong>
+              <strong>
+                {kasse.gesamt_tee || 0} x{" "}
+                {einstellungen?.bezeichnung_position3 || "Tee"}
+              </strong>
               <br />
-              <strong>{kasse.gesamt_erwachsene || 0} x {einstellungen?.bezeichnung_position2 || "Erwachsene"}</strong>
+              <strong>
+                {kasse.gesamt_erwachsene || 0} x{" "}
+                {einstellungen?.bezeichnung_position2 || "Erwachsene"}
+              </strong>
               <br />
-              <strong>{kasse.gesamt_kinder || 0} x {einstellungen?.bezeichnung_position1 || "Kinder"}</strong>
+              <strong>
+                {kasse.gesamt_kinder || 0} x{" "}
+                {einstellungen?.bezeichnung_position1 || "Kinder"}
+              </strong>
             </div>
             <div style={{ textAlign: "right" }}>
               <strong>Kasse Soll:</strong>{" "}
@@ -769,6 +817,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
         <div className="action-buttons">
           <button className="action-button reset" onClick={handleReset}>
             🔄 Reset
+          </button>
+          <button
+            className="action-button save"
+            onClick={handlePreiseAktualisieren}
+            style={{ background: "#9f7aea" }}
+          >
+            💰 Preise aktualisieren
           </button>
           <button
             className="action-button save"
@@ -840,7 +895,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ color: "#2d3748", marginBottom: "20px", textAlign: "center" }}>
+            <h2
+              style={{
+                color: "#2d3748",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
               Neue Abrechnung erstellen
             </h2>
             <div style={{ marginBottom: "20px" }}>

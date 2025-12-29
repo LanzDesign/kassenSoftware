@@ -87,6 +87,12 @@ export const kassenService = {
     const response = await api.post(`/abrechnungen/${id}/reset/`);
     return response.data;
   },
+
+  // Aktualisiere Preise aus Einstellungen
+  aktualisiere_preise: async (id: number): Promise<Kassenabrechnung> => {
+    const response = await api.post(`/abrechnungen/${id}/aktualisiere_preise/`);
+    return response.data;
+  },
 };
 
 export default api;

@@ -69,3 +69,15 @@ class KassenabrechnungViewSet(viewsets.ModelViewSet):
         kassenabrechnung.save()
         serializer = self.get_serializer(kassenabrechnung)
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def aktualisiere_preise(self, request, pk=None):
+        """Aktualisiert die Preise aus den aktuellen Einstellungen"""
+        kassenabrechnung = self.get_object()
+        einstellungen = KassenEinstellungen.get_einstellungen()
+        kassenabrechnung.preis_kinder = einstellungen.preis_position1
+        kassenabrechnung.preis_erwachsene = einstellungen.preis_position2
+        kassenabrechnung.preis_tee = einstellungen.preis_position3
+        kassenabrechnung.save()
+        serializer = self.get_serializer(kassenabrechnung)
+        return Response(serializer.data)
