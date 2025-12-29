@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -34,6 +34,7 @@ def login_view(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def logout_view(request):
     """Logout-Endpoint - löscht Token"""
     if request.user.is_authenticated:
@@ -60,6 +61,7 @@ def health_check_view(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def einstellungen_view(request):
     """Gibt die Kassen-Einstellungen zurück"""
     einstellungen = KassenEinstellungen.get_einstellungen()
@@ -80,6 +82,7 @@ class KassenabrechnungViewSet(viewsets.ModelViewSet):
     """
     queryset = Kassenabrechnung.objects.all()
     serializer_class = KassenabrechnungSerializer
+    permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def aktuelle(self, request):
