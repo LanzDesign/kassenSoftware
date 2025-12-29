@@ -10,6 +10,8 @@ function App() {
   const [showResult, setShowResult] = useState(false);
   const [einstellungen, setEinstellungen] = useState<KassenEinstellungen | null>(null);
   const [letzteKosten, setLetzteKosten] = useState<number>(0);
+  const [showNeueAbrechnungModal, setShowNeueAbrechnungModal] = useState(false);
+  const [neuerKassenstand, setNeuerKassenstand] = useState<string>("");
 
   useEffect(() => {
     initializeApp();
@@ -226,6 +228,50 @@ function App() {
         gegeben: 0,
       });
       alert(`Vielen Dank für die Spende von ${rueckgeld.toFixed(2)}€!`);
+    }
+  };
+
+  const handleNeueAbrechnung = () => {
+    if (!einstellungen) return;
+    setNeuerKassenstand(einstellungen.kassenstand_anfang_default);
+    setShowNeueAbrechnungModal(true);
+  };
+
+  const handleNeueAbrechnungErstellen = async () => {
+    if (!einstellungen) return;
+    const kassenstandWert = parseFloat(neuerKassenstand);
+    if (isNaN(kassenstandWert) || kassenstandWert < 0) {
+      alert("Bitte geben Sie einen gültigen Kassenwert ein!");
+      return;
+    }
+
+    try {
+      const heute = new Date().toISOString().split("T")[0];
+      const neueKasse = await kassenService.create({
+        datum: heute,
+        kassenstand_anfang: kassenstandWert,
+        anzahl_kinder: 0,
+        anzahl_erwachsene: 0,
+        anzahl_tee: 0,
+        preis_kinder: parseFloat(einstellungen.preis_position1),
+        preis_erwachsene: parseFloat(einstellungen.preis_position2),
+        preis_tee: parseFloat(einstellungen.preis_position3),
+        rueckgeldspende: 0,
+        anzahl_50euro: 0,
+        anzahl_20euro: 0,
+        anzahl_10euro: 0,
+        anzahl_5euro: 0,
+        anzahl_2euro: 0,
+        anzahl_1euro: 0,
+        anzahl_50cent: 0,
+        anzahl_20cent: 0,
+        anzahl_10cent: 0,
+      });
+      setKasse(normalizeKasse(neueKasse));
+      setShowNeueAbrechnungModal(false);
+      alert("Neue Abrechnung erfolgreich erstellt!");
+    } catch (err: any) {
+      alert("Fehler beim Erstellen der neuen Abrechnung: " + err.message);
     }
   };
 
@@ -738,6 +784,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           >
             💾 Spende
           </button>
+          <button
+            className="action-button save"
+            onClick={handleNeueAbrechnung}
+            style={{ background: "#48bb78" }}
+          >
+            ➕ Neue Abrechnung
+          </button>
         </div>
       </div>
 
@@ -758,6 +811,104 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           year: "numeric",
         })}
       </div>
+
+      {/* Modal für Neue Abrechnung */}
+      {showNeueAbrechnungModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setShowNeueAbrechnungModal(false)}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "30px",
+              borderRadius: "15px",
+              maxWidth: "400px",
+              width: "90%",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ color: "#2d3748", marginBottom: "20px", textAlign: "center" }}>
+              Neue Abrechnung erstellen
+            </h2>
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  display: "block",
+                  color: "#2d3748",
+                  fontWeight: "bold",
+                  marginBottom: "10px",
+                  fontSize: "1rem",
+                }}
+              >
+                Startwert der Kasse (€):
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={neuerKassenstand}
+                onChange={(e) => setNeuerKassenstand(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  fontSize: "1.2rem",
+                  border: "2px solid #cbd5e0",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+                autoFocus
+              />
+            </div>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                onClick={() => setShowNeueAbrechnungModal(false)}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "#e53e3e",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={handleNeueAbrechnungErstellen}
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  background: "#48bb78",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
+              >
+                Erstellen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
