@@ -3,11 +3,32 @@ import { Kassenabrechnung } from "./types";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
+// Helper function to get CSRF token from cookie
+const getCSRFToken = (): string | null => {
+  const name = "csrftoken";
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift() || null;
+  }
+  return null;
+};
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Enable sending cookies
+});
+
+// Add CSRF token to every request
+api.interceptors.request.use((config) => {
+  const csrfToken = getCSRFToken();
+  if (csrfToken) {
+    config.headers["X-CSRFToken"] = csrfToken;
+  }
+  return config;
 });
 
 export interface KassenEinstellungen {
@@ -21,6 +42,11 @@ export interface KassenEinstellungen {
 }
 
 export const kassenService = {
+  // Hole CSRF Token
+  initCSRF: async (): Promise<void> => {
+    await api.get("/csrf/");
+  },
+
   // Hole Einstellungen
   getEinstellungen: async (): Promise<KassenEinstellungen> => {
     const response = await api.get("/einstellungen/");

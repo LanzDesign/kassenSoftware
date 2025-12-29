@@ -12,9 +12,19 @@ function App() {
   const [letzteKosten, setLetzteKosten] = useState<number>(0);
 
   useEffect(() => {
-    loadKasse();
-    loadEinstellungen();
+    initializeApp();
   }, []);
+
+  const initializeApp = async () => {
+    try {
+      // Initialize CSRF token first
+      await kassenService.initCSRF();
+      // Then load data
+      await Promise.all([loadKasse(), loadEinstellungen()]);
+    } catch (err) {
+      console.error("Fehler beim Initialisieren:", err);
+    }
+  };
 
   const loadEinstellungen = async () => {
     try {

@@ -153,6 +153,11 @@ if os.getenv('DEBUG', 'False') == 'True':
         "kassensoftware.fecg-lahr-app.de",
     ])
 
+# CSRF Cookie Settings für API
+CSRF_COOKIE_HTTPONLY = False  # JavaScript muss den Cookie lesen können
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_USE_SESSIONS = False  # Cookie-basiertes CSRF statt Session
+
 # Security Settings
 # SECURE_SSL_REDIRECT sollte NICHT im Backend-Container aktiviert sein,
 # da NGINX das SSL-Handling übernimmt
