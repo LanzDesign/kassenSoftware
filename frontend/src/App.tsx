@@ -528,12 +528,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
         <div className="sales-grid">
           <div className="sales-item kinder">
             <div className="counter-display">{kasse.anzahl_kinder} x</div>
-            <h3>Kinder</h3>
-            <div 
-              className="sales-emoji" 
+            <h3 
               onClick={() => incrementCounter("anzahl_kinder", 1)}
               style={{ cursor: "pointer" }}
             >
+              Kinder
+            </h3>
+            <div className="sales-emoji">
               👶
             </div>
             <div className="counter-buttons">
@@ -572,12 +573,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
 
           <div className="sales-item erwachsen">
             <div className="counter-display">{kasse.anzahl_erwachsene} x</div>
-            <h3>Erwach</h3>
-            <div 
-              className="sales-emoji" 
+            <h3 
               onClick={() => incrementCounter("anzahl_erwachsene", 1)}
               style={{ cursor: "pointer" }}
             >
+              Erwach
+            </h3>
+            <div className="sales-emoji">
               👨
             </div>
             <div className="counter-buttons">
