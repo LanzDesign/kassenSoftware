@@ -89,6 +89,7 @@ docker-compose logs frontend | grep "GET /static"
 ```
 
 **Erwartetes Ergebnis:**
+
 - ✅ Hauptseite lädt (200 OK)
 - ✅ Keine 404 Fehler für `/static/js/` oder `/static/css/`
 - ✅ Console zeigt keine MIME-Type Fehler
@@ -142,6 +143,7 @@ build/
 **Symptom:** Assets werden mit `/static/` statt `./static/` referenziert
 
 **Lösung:** In `frontend/.env.production`:
+
 ```
 PUBLIC_URL=/
 ```
@@ -151,6 +153,7 @@ PUBLIC_URL=/
 **Symptom:** Build ignoriert Environment-Variablen
 
 **Lösung:** In `frontend/Dockerfile`:
+
 ```dockerfile
 COPY .env.production .env.production
 ENV NODE_ENV=production
@@ -162,6 +165,7 @@ RUN npm run build
 **Symptom:** Absolute Pfade statt relative
 
 **Lösung:** In `frontend/package.json`:
+
 ```json
 {
   "homepage": ".",
@@ -206,6 +210,7 @@ location /static/ {
 Wenn das Problem weiterhin besteht:
 
 1. **Logs sammeln:**
+
    ```bash
    docker-compose logs frontend > frontend-logs.txt
    docker-compose exec frontend ls -laR /usr/share/nginx/html/ > container-content.txt
@@ -213,6 +218,7 @@ Wenn das Problem weiterhin besteht:
    ```
 
 2. **Container-Inhalt prüfen:**
+
    ```bash
    docker-compose exec frontend sh
    cd /usr/share/nginx/html
