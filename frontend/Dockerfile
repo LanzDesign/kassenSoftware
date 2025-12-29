@@ -9,14 +9,20 @@ COPY package.json package-lock.json* ./
 # Install dependencies
 RUN npm install
 
-# Copy source files
-COPY . .
+# Copy source files (exclude .env to avoid conflicts)
+COPY package.json package-lock.json* tsconfig.json ./
+COPY public ./public
+COPY src ./src
 
-# Copy environment file for production build
-COPY .env.production .env.production
+# Copy and use .env.production as .env for build
+COPY .env.production .env
 
-# Build the app with production environment
+# Set environment variables for build
 ENV NODE_ENV=production
+ENV PUBLIC_URL=/
+ENV REACT_APP_API_URL=/api
+
+# Build the app
 RUN npm run build
 
 # Production stage
