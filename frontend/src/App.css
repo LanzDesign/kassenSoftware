@@ -82,22 +82,18 @@
 }
 
 .sales-section {
-  background: white;
-  padding: 12px 15px;
-  border-radius: 12px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sales-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .sales-item {
   border-radius: 12px;
-  padding: 12px;
+  padding: 20px 12px;
   text-align: center;
 }
 
@@ -114,38 +110,57 @@
 }
 
 .sales-item h3 {
-  margin-bottom: 6px;
-  font-size: 0.95rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: white;
+  background: #2c5282;
+  border-radius: 25px;
+  padding: 8px 16px;
+  display: inline-block;
+}
+
+.sales-emoji {
+  font-size: 3rem;
+  margin: 8px 0;
 }
 
 .counter-display {
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: bold;
-  margin: 6px 0;
+  margin-bottom: 8px;
 }
 
 .counter-buttons {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 12px;
 }
 
 .counter-button {
-  width: 38px;
-  height: 38px;
+  min-width: 60px;
+  height: 60px;
   border: none;
   border-radius: 50%;
   background: #2c5282;
   color: white;
-  font-size: 0.95rem;
+  font-size: 1.5rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s;
 }
 
 .counter-button:hover {
   background: #1e3a5f;
+  transform: scale(1.05);
+}
+
+.counter-button.tee-button {
+  width: auto;
+  padding: 0 20px;
+  border-radius: 30px;
 }
 
 .counter-button.minus {
@@ -153,6 +168,37 @@
 }
 
 .counter-button.minus:hover {
+  background: #c53030;
+}
+
+/* Gegeben und Rückgeld Anzeige */
+.payment-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.payment-item {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.payment-item.rueckgeld {
+  background: #d1fae5;
+}
+
+.payment-value {
+  color: #2c5282;
+  font-size: 1.8rem;
+}
   background: #c53030;
 }
 
@@ -199,44 +245,46 @@
 
 .money-section {
   background: white;
-  padding: 10px 15px;
+  padding: 12px 15px;
   border-radius: 12px;
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.money-section h2 {
-  font-size: 0.95rem;
-  margin-bottom: 8px;
-  color: #2d3748;
-}
-
 .money-grid {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 8px;
 }
 
 .money-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6px 4px;
-  background: #f7fafc;
-  border-radius: 8px;
+  padding: 8px 6px;
+  background: #2c5282;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.money-item:hover {
+  background: #1e3a5f;
+  transform: scale(1.05);
 }
 
 .money-item .label {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: bold;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
+  color: white;
 }
 
 .money-item .count {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: bold;
-  margin: 3px 0;
+  margin: 4px 0;
+  color: white;
 }
 
 .money-buttons {
@@ -271,19 +319,24 @@
 }
 
 .action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .action-button {
-  padding: 10px;
+  padding: 15px;
   border: none;
-  border-radius: 10px;
-  font-size: 0.9rem;
+  border-radius: 12px;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
 }
 
 .action-button.reset {
@@ -293,15 +346,17 @@
 
 .action-button.reset:hover {
   background: #1e3a5f;
+  transform: scale(1.02);
 }
 
 .action-button.save {
-  background: #48bb78;
+  background: #2c5282;
   color: white;
 }
 
 .action-button.save:hover {
-  background: #38a169;
+  background: #1e3a5f;
+  transform: scale(1.02);
 }
 
 .error {

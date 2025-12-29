@@ -489,29 +489,17 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           <div className="value">{aktuelleGesamtsumme.toFixed(2)}€</div>
         </div>
         <button className="next-button" onClick={handleZahlungAbschliessen}>
-          💰 Zahlung
+          =&gt; nächster
         </button>
       </div>
 
       <div className="sales-section">
-        <h2>Verkäufe</h2>
         <div className="sales-grid">
           <div className="sales-item kinder">
-            <h3>👶 {einstellungen?.bezeichnung_position1 || "Kinder"}</h3>
             <div className="counter-display">{kasse.anzahl_kinder} x</div>
+            <h3>Kinder</h3>
+            <div className="sales-emoji">👶</div>
             <div className="counter-buttons">
-              <button
-                className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 1)}
-              >
-                1
-              </button>
-              <button
-                className="counter-button"
-                onClick={() => incrementCounter("anzahl_kinder", 2)}
-              >
-                2
-              </button>
               <button
                 className="counter-button"
                 onClick={() => incrementCounter("anzahl_kinder", 3)}
@@ -543,27 +531,13 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                 -
               </button>
             </div>
-            <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-              {(kasse.anzahl_kinder * kasse.preis_kinder).toFixed(2)}€
-            </p>
           </div>
 
           <div className="sales-item erwachsen">
-            <h3>👨 {einstellungen?.bezeichnung_position2 || "Erwachsene"}</h3>
             <div className="counter-display">{kasse.anzahl_erwachsene} x</div>
+            <h3>Erwach</h3>
+            <div className="sales-emoji">👨</div>
             <div className="counter-buttons">
-              <button
-                className="counter-button"
-                onClick={() => incrementCounter("anzahl_erwachsene", 1)}
-              >
-                1
-              </button>
-              <button
-                className="counter-button"
-                onClick={() => incrementCounter("anzahl_erwachsene", 2)}
-              >
-                2
-              </button>
               <button
                 className="counter-button"
                 onClick={() => incrementCounter("anzahl_erwachsene", 3)}
@@ -589,20 +563,17 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                 -
               </button>
             </div>
-            <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-              {(kasse.anzahl_erwachsene * kasse.preis_erwachsene).toFixed(2)}€
-            </p>
           </div>
 
           <div className="sales-item tee">
-            <h3>☕ {einstellungen?.bezeichnung_position3 || "Tee"}</h3>
             <div className="counter-display">{kasse.anzahl_tee} x</div>
+            <div className="sales-emoji">☕</div>
             <div className="counter-buttons">
               <button
-                className="counter-button"
+                className="counter-button tee-button"
                 onClick={() => incrementCounter("anzahl_tee", 1)}
               >
-                +
+                Tee
               </button>
               <button
                 className="counter-button minus"
@@ -611,10 +582,19 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                 -
               </button>
             </div>
-            <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-              {(kasse.anzahl_tee * kasse.preis_tee).toFixed(2)}€
-            </p>
           </div>
+        </div>
+      </div>
+
+      {/* Gegeben und Rückgeld Anzeige */}
+      <div className="payment-display">
+        <div className="payment-item">
+          <span>Gegeben:</span>
+          <span className="payment-value">{(kasse.gegeben || 0).toFixed(2)}€</span>
+        </div>
+        <div className="payment-item rueckgeld">
+          <span>Rückgeld:</span>
+          <span className="payment-value">{(kasse.rueckgeld || 0).toFixed(2)}€</span>
         </div>
       </div>
 
@@ -763,11 +743,16 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             },
           ].map((item) => (
             <div key={item.field} className="money-item">
+              <div className="count">
+                {kasse[item.field as keyof Kassenabrechnung]} x
+              </div>
               <img
                 src={`/images/money/${item.img}`}
                 alt={item.label}
+                onClick={() =>
+                  incrementCounter(item.field as keyof Kassenabrechnung, 1)
+                }
                 onError={(e) => {
-                  // Fallback wenn Bild nicht gefunden wird
                   e.currentTarget.style.display = "none";
                   const nextEl = e.currentTarget
                     .nextElementSibling as HTMLElement;
@@ -775,35 +760,14 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
                 }}
                 style={{
                   width: "100%",
-                  height: "40px",
+                  height: "60px",
                   objectFit: "contain",
-                  marginBottom: "4px",
-                  borderRadius: "4px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
                 }}
               />
               <div className="label" style={{ display: "none" }}>
                 {item.label}
-              </div>
-              <div className="count">
-                {kasse[item.field as keyof Kassenabrechnung]} x
-              </div>
-              <div className="money-buttons">
-                <button
-                  className="counter-button"
-                  onClick={() =>
-                    incrementCounter(item.field as keyof Kassenabrechnung, 1)
-                  }
-                >
-                  +
-                </button>
-                <button
-                  className="counter-button minus"
-                  onClick={() =>
-                    incrementCounter(item.field as keyof Kassenabrechnung, -1)
-                  }
-                >
-                  -
-                </button>
               </div>
               <div
                 style={{
@@ -826,7 +790,6 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
       {/* Bottom Section: Zusammenfassung und Buttons */}
       <div className="bottom-section">
         <div className="summary-info">
-          <h3>Gesamt</h3>
           <div
             style={{
               display: "grid",
@@ -836,63 +799,38 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
             }}
           >
             <div>
-              <strong>
-                {kasse.gesamt_tee || 0} x{" "}
-                {einstellungen?.bezeichnung_position3 || "Tee"}
-              </strong>
+              <strong>Gesamt:</strong>
               <br />
-              <strong>
-                {kasse.gesamt_erwachsene || 0} x{" "}
-                {einstellungen?.bezeichnung_position2 || "Erwachsene"}
-              </strong>
+              {kasse.gesamt_kinder || 0} x Kaffee
               <br />
-              <strong>
-                {kasse.gesamt_kinder || 0} x{" "}
-                {einstellungen?.bezeichnung_position1 || "Kinder"}
-              </strong>
+              {kasse.gesamt_erwachsene || 0} x Erwachsene
+              <br />
+              {kasse.gesamt_tee || 0} x Kinder
             </div>
             <div style={{ textAlign: "right" }}>
-              <strong>Kasse Soll:</strong>{" "}
-              {(kasse.kassenstand_soll || 0).toFixed(2)}€<br />
-              <strong>Bargeld:</strong> {(kasse.bargeld_gesamt || 0).toFixed(2)}
-              €<br />
-              <strong>Spende:</strong> {(kasse.rueckgeldspende || 0).toFixed(2)}
-              €
+              <strong>letzte Verkauf:</strong>
+              <br />
+              {kasse.anzahl_kinder || 0} x Kaffee
+              <br />
+              {kasse.anzahl_erwachsene || 0} x Erwachsene
+              <br />
+              {kasse.anzahl_tee || 0} x Kinder
             </div>
           </div>
         </div>
 
         <div className="action-buttons">
           <button className="action-button reset" onClick={handleReset}>
-            🔄 Reset
-          </button>
-          <button
-            className="action-button save"
-            onClick={handlePreiseAktualisieren}
-            style={{ background: "#9f7aea" }}
-          >
-            💰 Preise aktualisieren
-          </button>
-          <button
-            className="action-button save"
-            onClick={handleBerichtTeilen}
-            style={{ background: "#5a67d8" }}
-          >
-            📄 Bericht
+            <div style={{ fontSize: "2.5rem", marginBottom: "5px" }}>🔄</div>
+            <div>Reset</div>
           </button>
           <button
             className="action-button save"
             onClick={handleRueckgeldspende}
-            style={{ background: "#f6ad55" }}
+            style={{ background: "#2c5282" }}
           >
-            💾 Spende
-          </button>
-          <button
-            className="action-button save"
-            onClick={handleNeueAbrechnung}
-            style={{ background: "#48bb78" }}
-          >
-            ➕ Neue Abrechnung
+            <div style={{ fontSize: "2.5rem", marginBottom: "5px" }}>💰</div>
+            <div>Rückgeldspende</div>
           </button>
         </div>
       </div>
@@ -900,15 +838,15 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
       <div
         style={{
           textAlign: "center",
-          fontSize: "0.75rem",
-          color: "white",
-          padding: "8px",
-          background: "rgba(255,255,255,0.1)",
+          fontSize: "0.9rem",
+          color: "#2d3748",
+          padding: "10px",
+          background: "white",
           borderRadius: "8px",
+          fontWeight: "bold",
         }}
       >
-        Datum:{" "}
-        {new Date(kasse.datum).toLocaleDateString("de-DE", {
+        Datum: {new Date(kasse.datum).toLocaleDateString("de-DE", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
