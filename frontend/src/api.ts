@@ -127,6 +127,7 @@ export const authService = {
     const response = await api.post("/login/", { username, password });
     const { token } = response.data;
     localStorage.setItem("authToken", token);
+    localStorage.setItem("username", response.data.username || username);
     return response.data;
   },
 
@@ -137,6 +138,7 @@ export const authService = {
       // Ignoriere Fehler beim Logout
     }
     localStorage.removeItem("authToken");
+    localStorage.removeItem("username");
   },
 
   isAuthenticated: (): boolean => {

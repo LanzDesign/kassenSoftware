@@ -318,46 +318,26 @@ function App() {
 
   const handleBerichtTeilen = () => {
     if (!kasse) return;
+    const username = localStorage.getItem("username") || "Unbekannt";
     const bericht = `
-═══════════════════════════════════════
-SONNTAGSKÜCHE - FECG LAHR
-KASSENABRECHNUNG
-═══════════════════════════════════════
-
-Datum: ${new Date(kasse.datum).toLocaleDateString("de-DE")}
-
-───────────────────────────────────────
+═════════════════════
+KASSENABRECHNUNG von Kasse1
+═════════════════════
 VERKÄUFE
-───────────────────────────────────────
-Kinder:      ${kasse.anzahl_kinder} x ${kasse.preis_kinder.toFixed(2)}€ = ${(
-      kasse.anzahl_kinder * kasse.preis_kinder
-    ).toFixed(2)}€
-Erwachsene:  ${kasse.anzahl_erwachsene} x ${kasse.preis_erwachsene.toFixed(
-      2
-    )}€ = ${(kasse.anzahl_erwachsene * kasse.preis_erwachsene).toFixed(2)}€
-Tee:         ${kasse.anzahl_tee} x ${kasse.preis_tee.toFixed(2)}€ = ${(
-      kasse.anzahl_tee * kasse.preis_tee
-    ).toFixed(2)}€
-
-───────────────────────────────────────
+─────────────────────
+Kinder:      ${kasse.gesamt_kinder || 0} x ${kasse.preis_kinder.toFixed(2)}€ = ${((kasse.gesamt_kinder || 0) * kasse.preis_kinder).toFixed(2)}€
+Erwachsene:  ${kasse.gesamt_erwachsene || 0} x ${kasse.preis_erwachsene.toFixed(2)}€ = ${((kasse.gesamt_erwachsene || 0) * kasse.preis_erwachsene).toFixed(2)}€
+Tee:         ${kasse.gesamt_tee || 0} x ${kasse.preis_tee.toFixed(2)}€ = ${((kasse.gesamt_tee || 0) * kasse.preis_tee).toFixed(2)}€
+Rückgeldspende  = ${(kasse.rueckgeldspende || 0).toFixed(2)}€
+─────────────────────
 KASSE
-───────────────────────────────────────
+─────────────────────
 Kassenstand Anfang:    ${kasse.kassenstand_anfang.toFixed(2)}€
 Tageseinnahmen:        ${(kasse.tageseinnahmen_gesamt || 0).toFixed(2)}€
 Kassenstand Soll:      ${(kasse.kassenstand_soll || 0).toFixed(2)}€
-Bargeld Gezählt:       ${(kasse.bargeld_gesamt || 0).toFixed(2)}€
-Differenz:             ${(
-      (kasse.bargeld_gesamt || 0) - (kasse.kassenstand_soll || 0)
-    ).toFixed(2)}€
-
-───────────────────────────────────────
-RÜCKGELDSPENDE
-───────────────────────────────────────
-Gespendetes Rückgeld:  ${(kasse.rueckgeldspende || 0).toFixed(2)}€
-
-═══════════════════════════════════════
-Erstellt: ${new Date().toLocaleString("de-DE")}
-═══════════════════════════════════════
+═════════════════════
+Erstellt: ${new Date().toLocaleString("de-DE")} von ${username}
+═════════════════════
     `.trim();
 
     // Kopiere in Zwischenablage
