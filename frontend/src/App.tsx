@@ -176,7 +176,7 @@ function App() {
     }
   };
 
-  const handleZahlungAbschliessen = () => {
+  const handleZahlungAbschliessen = async () => {
     if (!kasse) return;
     // Berechne aktuelle Gesamtsumme der aktuellen Transaktion
     const aktuelleGesamtsumme =
@@ -214,7 +214,7 @@ function App() {
     const neuesGesamtBargeld = (kasse.gesamt_bargeld || 0) + aktuellesBargeld;
 
     // Zahlung speichern, aktuelle Zähler zurücksetzen, Gesamtsummen aktualisieren
-    updateKasse({
+    await updateKasse({
       gegeben: aktuellesBargeld,
       rueckgeld,
       gesamt_kinder: neueGesamtKinder,
@@ -568,18 +568,6 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
               </button>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Gegeben und Rückgeld Anzeige */}
-      <div className="payment-display">
-        <div className="payment-item">
-          <span>Gegeben:</span>
-          <span className="payment-value">{(kasse.gegeben || 0).toFixed(2)}€</span>
-        </div>
-        <div className="payment-item rueckgeld">
-          <span>Rückgeld:</span>
-          <span className="payment-value">{(kasse.rueckgeld || 0).toFixed(2)}€</span>
         </div>
       </div>
 
