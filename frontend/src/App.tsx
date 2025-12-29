@@ -459,37 +459,6 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
 
   return (
     <div className="App">
-      {/* Header */}
-      <div className="header">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <h1>Sonntagsküche - FECG-Lahr</h1>
-            <p>Datum: {new Date(kasse.datum).toLocaleDateString("de-DE")}</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            style={{
-              background: "#e53e3e",
-              color: "white",
-              border: "none",
-              padding: "8px 16px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-            }}
-          >
-            🚪 Abmelden
-          </button>
-        </div>
-      </div>
-
       {/* Top Section: Gesamtsumme, Gegeben, Rückgeld, Nächster Button */}
       <div className="top-section">
         <div className="summary-card">
@@ -860,13 +829,33 @@ Erstellt: ${new Date().toLocaleString("de-DE")}
           background: "white",
           borderRadius: "8px",
           fontWeight: "bold",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        Datum: {new Date(kasse.datum).toLocaleDateString("de-DE", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })}
+        <span>
+          Datum: {new Date(kasse.datum).toLocaleDateString("de-DE", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}
+        </span>
+        <button
+          onClick={handleLogout}
+          style={{
+            background: "#e53e3e",
+            color: "white",
+            border: "none",
+            padding: "6px 12px",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+            fontWeight: "bold",
+          }}
+        >
+          🚪 Abmelden
+        </button>
       </div>
 
       {/* Modal für Neue Abrechnung */}
