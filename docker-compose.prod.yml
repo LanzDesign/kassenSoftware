@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: kasse_db
       POSTGRES_USER: kasse_user
-      POSTGRES_PASSWORD: dein_sicheres_passwort
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: unless-stopped
     networks:
       - kassensoftware-network
@@ -16,6 +16,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   backend:
     build: ./backend
@@ -25,6 +33,7 @@ services:
     volumes:
       - ./backend:/app
       - backend-static:/app/staticfiles
+      - backend-logs:/app/logs
     env_file:
       - .env
     depends_on:
@@ -39,6 +48,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   frontend:
     build: ./frontend
@@ -56,9 +73,18 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 
 volumes:
   backend-static:
+  backend-logs:
   postgres-data:
 
 networks:
